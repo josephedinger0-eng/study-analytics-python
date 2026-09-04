@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 class StudyAnalytics:
 
     def __init__(self, study_sessions):
@@ -69,5 +71,34 @@ class StudyAnalytics:
 
         return minutes_by_date
 
+    def get_longest_study_streak(self):
+        if len(self.study_sessions) == 0:
+            return 0
+
+        study_dates = set()
+
+        for session in self.study_sessions:
+            study_dates.add(session.date)
+
+        sorted_dates = sorted(study_dates)
+
+        longest_streak = 1
+        current_streak = 1
+
+        for i in range(1, len(sorted_dates)):
+
+            if sorted_dates[i] == sorted_dates[i-1] + timedelta(days=1):
+                current_streak += 1
+
+                if current_streak > longest_streak:
+                    longest_streak = current_streak
+
+            else:
+                current_streak = 1
+
+        return longest_streak
+
+
+        
 
 
