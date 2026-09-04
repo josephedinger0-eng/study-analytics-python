@@ -1,5 +1,6 @@
 from study_session import StudySession
 from study_analytics import StudyAnalytics
+from study_data_manager import save_sessions, load_sessions
 from datetime import date
 
 def get_study_session():
@@ -22,24 +23,27 @@ def display_study_sessions(study_sessions):
         print()
 
 def display_summary(analytics):
-    print("======= STUDY SUMMARY =======")
+    print("======= STUDY SUMMARY =======\n")
 
     print(f"Total minutes: {analytics.get_total_minutes()}")
     print(f"Average Score: {analytics.get_average_score()}")
 
+    print("\n--Minutes for each Subject--")
     minutes_by_subject = analytics.get_minutes_by_subject()
     for subject, minutes in minutes_by_subject.items():
         print(f"{subject}: {minutes} minutes")
-    
+
+    print("\n--Average Score by Topic--")
     average_score_by_topic = analytics.get_average_score_by_topic()
     for topic, score in average_score_by_topic.items():
         print(f"{topic}: {score}%")
-        
+
+    print("\n--Minutes by Date--")
     minutes_by_date = analytics.get_minutes_by_date()
     for date, minutes in minutes_by_date.items():
         print(f"{date}: {minutes} minutes")
 
-    print(f"Longest Study Streak: {analytics.get_longest_study_streak()}")
+    print(f"\nLongest Study Streak: {analytics.get_longest_study_streak()}")
 
 def modify_or_delete_session(study_sessions):
     if len(study_sessions) == 0:
@@ -104,17 +108,17 @@ def validate_date_input(prompt):
             print("Please enter a valid date.")
     
 def main():
-    study_sessions = []
+    study_sessions = load_sessions()
     analytics = StudyAnalytics(study_sessions)
     running = True
 
     while running:
-        print("Welcome to the Study Session Tracker!")
-        print("\n1. Add a new study session")
-        print("\n2. View all study sessions")
-        print("\n3. View study session summary")
-        print("\n4. Modify or delete a study session")
-        print("\n5. Save & exit")
+        print("\nWelcome to the Study Session Tracker!")
+        print("1. Add a new study session")
+        print("2. View all study sessions")
+        print("3. View study session summary")
+        print("4. Modify or delete a study session")
+        print("5. Save & exit")
 
         choice = validate_int_input("Please select an option (1-5): ", 1, 5)
 
@@ -129,6 +133,7 @@ def main():
             case 4:
                 modify_or_delete_session(study_sessions)
             case 5: 
+                save_sessions(study_sessions)
                 running = False
 
 if __name__ == "__main__":
